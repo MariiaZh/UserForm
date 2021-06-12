@@ -1,0 +1,133 @@
+<form [formGroup]="registrationForm">
+
+    <fieldset formGroupName="name">
+        <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input id="firstName" class="base neutral" placeholder="Lara" [ngClass]="{
+                'neutral': firstName.invalid && !firstName.dirty,
+                'has-error': firstName.invalid && firstName.dirty, 
+                'has-success': firstName.valid && firstName.dirty
+            }" type="text" formControlName="firstName">
+            <div class="alert alert-danger hint" *ngIf="firstName.invalid && firstName.dirty">
+                <p>Required. Min length - 3 symbols</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input id="lastName" class="base neutral" placeholder="Croft" [ngClass]="{
+                'neutral': lastName.invalid && !lastName.dirty,
+                'has-error': lastName.invalid && lastName.dirty, 
+                'has-success': lastName.valid && lastName.dirty
+            }" type="text" formControlName="lastName">
+            <div class="alert alert-danger hint" *ngIf="lastName.invalid && lastName.dirty">
+                <p>Required. Min length - 3 symbols</p>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="form-group">
+
+        <label for="birthday">Date of Birthday:</label>
+        <mat-form-field class="birthdayWrapper" appearance="fill">
+            <input id="birthday" matInput placeholder="12.12.99" [matDatepicker]="picker" [formControl]="dateOfBirth">
+            <mat-datepicker-toggle class="birthdayToggle" matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker class="birthdayLine" #picker></mat-datepicker>
+        </mat-form-field>
+        <div class="alert alert-danger hint-short" *ngIf="dateOfBirth.invalid && dateOfBirth.dirty">
+            <p>Choose date of your birthday</p>
+        </div>
+    </div>
+
+    <fieldset formGroupName="technologies">
+        <div class="form-group">
+            <label for="framework">Framework</label>
+            <select id="framework" class="neutral" formControlName="framework">
+                <option value="default"></option>
+                <option value="Angular">Angular</option>
+                <option value="React">React</option>
+                <option value="Vue">Vue</option>
+            </select>
+        </div>
+
+        <div class="form-group" *ngIf="framework.value != 'default' && framework.value != ''"
+            [ngSwitch]="framework.value">
+            <label for="version">Framework version</label>
+            <select *ngSwitchCase="'Angular'" id="version" class="neutral" formControlName="frameworkVersion">
+                <option value="default"></option>
+                <option value="1">1.1.1</option>
+                <option value="2">1.2.1</option>
+                <option value="3">1.3.3</option>
+            </select>
+            <select *ngSwitchCase="'React'" id="version" class="neutral" formControlName="frameworkVersion">
+                <option value="default"></option>
+                <option value="1">2.1.2</option>
+                <option value="2">3.2.4</option>
+                <option value="3">4.3.1</option>
+            </select>
+            <select *ngSwitchCase="'Vue'" id="version" class="neutral" formControlName="frameworkVersion">
+                <option value="default"></option>
+                <option value="1">3.3.1</option>
+                <option value="2">5.2.1</option>
+                <option value="3">5.1.3</option>
+            </select>
+        </div>
+    </fieldset>
+
+    <div class="form-group">
+        <label for="email">E-mail</label>
+        <input id="email" placeholder="laracroft@gmail.com" class="base neutral" [ngClass]="{
+            'neutral': email.invalid && !email.dirty,
+            'has-error': email.invalid && email.dirty, 
+            'has-success': email.valid && email.dirty
+        }" type="email" formControlName="email">
+        <div class="alert alert-danger hint" *ngIf="email.invalid && email.dirty">
+            <p>This email invalid!</p>
+        </div>
+        <div class="base pending" *ngIf="email.pending">
+            <p>Email is being verified</p>
+        </div>
+
+    </div>
+
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" placeholder="12345678" class="base neutral" [ngClass]="{
+            'neutral': password.invalid && !password.dirty,
+            'has-error': password.invalid && password.dirty, 
+            'has-success': password.valid && password.dirty
+        }" type="password" formControlName="password">
+        <div class="alert alert-danger hint" *ngIf="password.invalid && password.dirty">
+            <p>Required. Min length - 8 symbols</p>
+        </div>
+    </div>
+
+    <fieldset formArrayName="hobbyArray"
+        *ngFor="let item of getHobbyControls('hobbyArray')['controls']; let i = index;">
+        <div class="hobby-wrapper" [formGroupName]="i">
+            <div class="form-group group-short">
+                <label for="hobbyName">Hobby:</label>
+                <input type="text" placeholder="the tomb raider" class="base neutral" name="hobby" id="hobbyName"
+                    formControlName="hobbyName">
+
+            </div>
+            <div class="form-group group-short">
+                <label for="duration">Duration:</label>
+                <input type="text" placeholder="10 years" class="base neutral" name="duration" id="duration"
+                    formControlName="hobbyDuration">
+
+            </div>
+        </div>
+
+    </fieldset>
+    <div class="addbtn-wrapper">
+        <input class="addbtn" type="button" value="Add more hobbies" (click)="addHobby()">
+    </div>
+
+    <div class="submit-wrapper">
+
+        <input class="subbtn" type="submit" value="Submit" (click)="onSubmit()">
+    </div>
+
+</form>
